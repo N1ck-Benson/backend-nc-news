@@ -56,36 +56,76 @@ describe("/api", () => {
       });
     });
   });
-  describe("articles", () => {
-    describe("GET :article_id", () => {
-      // HAPPY PATH:
-      test("Status: 200, responds with article object with correct properties", () => {
-        // CURRENTLY THROWING AN ERROR IN THE MODEL: KNEX QUERY NOT WORKING
-        return request(app)
-          .get("/api/articles/1")
-          .expect(200)
-          .then(({ body }) => {
-            expect(body).toMatchObject({
-              author: expect.any(String),
-              title: expect.any(String),
-              article_id: expect.any(Number),
-              body: expect.any(String),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number),
-            });
+});
+describe("articles", () => {
+  describe("GET :article_id", () => {
+    // HAPPY PATH:
+    test("Status: 200, responds with article object with correct properties", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchObject({
+            article: {
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              body: "I find this existence challenging",
+              topic: "mitch",
+              created_at: "2018-11-15T12:21:54.171Z",
+              votes: 100,
+              comment_count: 13,
+            },
           });
-      });
+        });
+    });
+    // SAD PATH:
+    test("Status: 404, not found", () => {
+      return request(app)
+        .get("/api/articles/5000")
+        .expect(404)
+        .then(({ text }) => {
+          expect(text).toBe("Not found");
+        });
+    });
+    test("Status: 400, bad request", () => {
+      return request(app)
+        .get("/api/articles/butter_bridge")
+        .expect(400)
+        .then(({ text }) => {
+          expect(text).toBe("Bad request");
+        });
     });
   });
-  // API SAD PATHS --> unsure how to implement this one
-  test("Status: 404 non-existent endpoint", () => {
-    return request(app)
-      .get("/api/topicz")
-      .expect(404)
-      .then(({ text }) => {
-        expect(text).toBe("Nothing found on this URL");
-      });
+  describe("PATCH :article_id", () => {
+    test.only("Status: 200, article successfully updated", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            article: {
+              author: "butter_bridge",
+              title: "Living in the shadow of a great man",
+              article_id: 1,
+              body: "I find this existence challenging",
+              topic: "mitch",
+              created_at: "2018-11-15T12:21:54.171Z",
+              votes: 101,
+              comment_count: 13,
+            },
+          });
+        });
+    });
   });
+});
+// API SAD PATHS --> unsure how to implement this one
+xtest("Status: 404 non-existent endpoint", () => {
+  return request(app)
+    .get("/api/topicz")
+    .expect(404)
+    .then(({ text }) => {
+      expect(text).toBe("Nothing found on this URL");
+    });
 });

@@ -6,15 +6,13 @@ exports.fetchUserByUsername = (username) => {
     .from("users")
     .where("username", "=", username)
     .then((userArray) => {
-      const resObj = {};
-      resObj.user = userArray[0];
-      if (!resObj.user) {
+      if (!userArray[0]) {
         return Promise.reject({
           status: 404,
           msg: `Found no user with username ${username}`,
         });
       } else {
-        return resObj;
+        return userArray;
       }
     });
 };

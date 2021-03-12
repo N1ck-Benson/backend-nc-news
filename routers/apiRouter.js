@@ -7,6 +7,4 @@ apiRouter.use("/topics", topicsRouter);
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/articles", articlesRouter);
 
-// Unsure how I would implement a 404 handler in here, i.e. for when the client requests /api/non-existent-endpoint
-
 module.exports = apiRouter;

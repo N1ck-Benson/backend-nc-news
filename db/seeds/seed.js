@@ -5,8 +5,7 @@ const {
   usersData,
 } = require("../data/index.js");
 const { changeKey } = require("../utils/changeKey.js");
-
-const { createRefObj, formatData } = require("../utils/data-manipulation.js");
+const { createRefObj } = require("../utils/createRefObj");
 const { formatComments } = require("../utils/formatComments.js");
 const { updateCreatedAt } = require("../utils/updateCreatedAt.js");
 
