@@ -25,7 +25,15 @@ exports.getArticleByArticleId = (req, res, next) => {
 exports.patchArticleVotes = (req, res, next) => {
   const articleId = req.params.article_id;
   const patchByAmount = req.body.inc_votes;
-  updateArticleVotes(articleId, patchByAmount).then((updatedArticle) => {
-    console.log(updatedArticle, "<< updatedArticle in controller");
-  });
+  updateArticleVotes(articleId, patchByAmount)
+    .then((updatedArticle) => {
+      const patchedArticle = {
+        article: updatedArticle[0],
+      };
+      res.status(200).send(patchedArticle);
+    })
+    .catch((err) => {
+      console.log(err, "<< err in controller");
+      next(err);
+    });
 };

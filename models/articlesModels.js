@@ -1,4 +1,5 @@
 const { request } = require("express");
+const { patch } = require("../app");
 const dbConnection = require("../db/dbConnection");
 
 exports.fetchArticleByArticleId = (articleId) => {
@@ -32,12 +33,25 @@ exports.updateArticleVotes = (articleId, patchByAmount) => {
     .from("articles")
     .where("article_id", "=", articleId)
     .then((outputArray) => {
-      const newVotes = (outputArray[0].votes += patchByAmount);
+      if (!outputArray[0]) {
+        if (parseFloat(articleId)) {
+          return Promise.reject({
+            status: 404,
+            msg: "Not found",
+          });
+        }
+        return Promise.reject({
+          status: 400,
+          msg: "Bad request",
+        });
+      }
+      let newVotes = outputArray[0].votes;
+      newVotes += patchByAmount;
       return newVotes;
     })
     .then((newVotes) => {
       return dbConnection("articles")
-        .where(("article_id", "=", articleId))
+        .where("article_id", "=", articleId)
         .update({
           votes: newVotes,
         })

@@ -98,7 +98,8 @@ describe("articles", () => {
     });
   });
   describe("PATCH :article_id", () => {
-    test.only("Status: 200, article successfully updated", () => {
+    // HAPPY PATH:
+    test("Status: 200, article successfully updated, responding with updated article", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ inc_votes: 1 })
@@ -113,9 +114,55 @@ describe("articles", () => {
               topic: "mitch",
               created_at: "2018-11-15T12:21:54.171Z",
               votes: 101,
-              comment_count: 13,
             },
           });
+        });
+    });
+    // SAD PATH:
+    test("Status: 404, article_id not found", () => {
+      return request(app)
+        .patch("/api/articles/5000")
+        .send({ votes: "cat" })
+        .expect(404)
+        .then(({ text }) => {
+          expect(text).toBe("Not found");
+        });
+    });
+    test("Status: 400, invalid article_id", () => {
+      return request(app)
+        .patch("/api/articles/butter_bridge")
+        .send({ votes: "cat" })
+        .expect(400)
+        .then(({ text }) => {
+          expect(text).toBe("Bad request");
+        });
+    });
+    // (to save time, 400s are not handled with custom http error codes)
+    test("Status: 400, request body contains a valid field with an invalid value/datatype", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ votes: "cat" })
+        .expect(400)
+        .then(({ text }) => {
+          expect(text).toBe("Bad request");
+        });
+    });
+    test("Status: 400, missing votes field in request body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ text }) => {
+          expect(text).toBe("Bad request");
+        });
+    });
+    test("Status: 400, additional invalid fields on request body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ votes: 1, canapees: 4 })
+        .expect(400)
+        .then(({ text }) => {
+          expect(text).toBe("Bad request");
         });
     });
   });

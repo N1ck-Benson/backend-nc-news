@@ -167,7 +167,6 @@ GET /api/topics
 
 **Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
 
-
 ```http
 GET /api/users/:username
 ```
@@ -221,6 +220,8 @@ PATCH /api/articles/:article_id
 - the updated article
 
 ---
+
+NOTE: use output of test suite included in Vel's feedback to inform tests from this endpoint onwards...
 
 ```http
 POST /api/articles/:article_id/comments
@@ -318,6 +319,12 @@ DELETE /api/comments/:comment_id
 
 ---
 
+AND NOW...
+
+When hosting and using this as a portfolio piece, make sure you delete this README and insert your own...
+
+---
+
 # ADVANCED TASKS
 
 ---
@@ -337,7 +344,6 @@ GET /api
 Make sure your application and your database is hosted using Heroku
 
 See the hosting.md file in this repo for more guidance
-
 
 #### Pagination
 
