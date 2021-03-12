@@ -1,8 +1,10 @@
-const { res } = require("../app");
+const { res, resource } = require("../app");
 const { fetchTopics } = require("../models/topicsModels");
 
 exports.getTopics = (req, res, next) => {
-  fetchTopics(req).then((topics) => {
-    res.status(200).send(topics);
+  fetchTopics().then((arrayOfTopics) => {
+    const resObj = {};
+    resObj.topics = arrayOfTopics;
+    res.status(200).send(resObj);
   });
 };
