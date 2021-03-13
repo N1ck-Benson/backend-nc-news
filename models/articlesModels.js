@@ -63,4 +63,8 @@ exports.updateArticleVotes = (articleId, patchByAmount) => {
 exports.addComment = (articleId, reqBody) => {
   // models inserts article_id, username and body into comments as an array of objects
   // returns the body (as an array containing one object)
+  const username = reqBody.username;
+  const body = reqBody.body;
+  console.log(username, "<< username in model");
+  return knex("comments").insert();
 };
