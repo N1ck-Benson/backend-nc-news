@@ -65,6 +65,8 @@ exports.addComment = (articleId, reqBody) => {
   // returns the body (as an array containing one object)
   const username = reqBody.username;
   const body = reqBody.body;
-  console.log(username, "<< username in model");
-  return knex("comments").insert();
+  return knex("comments").insert(
+    [{ article_id: articleId }, { author: username }, { body: body }],
+    ["body"]
+  );
 };

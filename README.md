@@ -227,6 +227,9 @@ NOTE: use output of test suite included in Vel's feedback to inform tests from t
 POST /api/articles/:article_id/comments
 ```
 
+----- SKIPPING THIS UNTIL FINISHED
+--> getting warning 'sqlite does not support inserting default values' and 'The query is empty' when trying to insert rows
+
 #### Request body accepts
 
 - an object with the following properties:

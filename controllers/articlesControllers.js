@@ -40,5 +40,7 @@ exports.patchArticleVotes = (req, res, next) => {
 exports.postComment = (req, res, next) => {
   const articleId = req.params.article_id;
   const reqBody = req.body;
-  addComment(articleId, reqBody);
+  addComment(articleId, reqBody).then((response) => {
+    console.log(response, "<< response in controller");
+  });
 };
