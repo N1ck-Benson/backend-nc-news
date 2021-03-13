@@ -20,7 +20,7 @@ these are all ok, formatComments isn't tested though!
 ### app
 
 Feel free to extract the error handling middleware to a separate folder, so app is looking clean and tidy! Works ok this way too tho.
---> extract error handling
+--> DONE
 
 ### routes
 

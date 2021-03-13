@@ -33,7 +33,6 @@ exports.patchArticleVotes = (req, res, next) => {
       res.status(200).send(patchedArticle);
     })
     .catch((err) => {
-      console.log(err, "<< err in controller");
       next(err);
     });
 };
