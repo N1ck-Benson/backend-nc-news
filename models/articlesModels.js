@@ -1,4 +1,5 @@
 const { request } = require("express");
+const { default: knex } = require("knex");
 const { patch } = require("../app");
 const dbConnection = require("../db/dbConnection");
 
@@ -57,4 +58,9 @@ exports.updateArticleVotes = (articleId, patchByAmount) => {
         })
         .returning("*");
     });
+};
+
+exports.addComment = (articleId, reqBody) => {
+  // models inserts article_id, username and body into comments as an array of objects
+  // returns the body (as an array containing one object)
 };

@@ -1,7 +1,7 @@
-const { patch } = require("../app");
 const {
   fetchArticleByArticleId,
   updateArticleVotes,
+  addComment,
 } = require("../models/articlesModels");
 
 exports.getArticleByArticleId = (req, res, next) => {
@@ -35,4 +35,10 @@ exports.patchArticleVotes = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.postComment = (req, res, next) => {
+  const articleId = req.params.article_id;
+  const reqBody = req.body;
+  addComment(articleId, reqBody);
 };

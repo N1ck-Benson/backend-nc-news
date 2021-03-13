@@ -29,7 +29,7 @@ good work thus far!
 ### controllers
 
 these are looking ok! as the controllers are the ones responsible for receiving the request and sending the response, we would say best practice is to handle the data manipulation at model level, like changing the key of count to be a number, but this isnt a major issue, just something you may want to keep in mind and refactor later on
---> move data manipulation to models
+--> DONE
 
 ### models
 

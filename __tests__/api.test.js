@@ -166,6 +166,21 @@ describe("articles", () => {
         });
     });
   });
+  describe("POST /:article_id/comments", () => {
+    test("Status: 201, successful post returning posted comment", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({ username: "butter_bridge", body: "I love this article!" })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body).toMatchObject({
+            comment: {
+              body: "I love this article!",
+            },
+          });
+        });
+    });
+  });
 });
 // API SAD PATHS --> unsure how to implement this one
 xtest("Status: 404 non-existent endpoint", () => {
