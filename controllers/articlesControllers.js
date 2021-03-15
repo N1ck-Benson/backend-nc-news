@@ -1,7 +1,9 @@
+const { post } = require("../app");
 const {
   fetchArticleByArticleId,
   updateArticleVotes,
   addComment,
+  fetchCommentByArticleId,
 } = require("../models/articlesModels");
 
 exports.getArticleByArticleId = (req, res, next) => {
@@ -37,10 +39,26 @@ exports.patchArticleVotes = (req, res, next) => {
     });
 };
 
+exports.getCommentByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  const { query } = req;
+  fetchCommentByArticleId(articleId, query).then((arrayFromModel) => {
+    const commentObject = {};
+    commentObject.comments = arrayFromModel;
+    res.status(200).send(commentObject);
+  });
+};
+
 exports.postComment = (req, res, next) => {
   const articleId = req.params.article_id;
   const reqBody = req.body;
-  addComment(articleId, reqBody).then((response) => {
-    console.log(response, "<< response in controller");
-  });
+  addComment(articleId, reqBody)
+    .then((response) => {
+      const postedComment = {};
+      postedComment.comment = response[0];
+      res.status(201).send(postedComment);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

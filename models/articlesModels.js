@@ -1,6 +1,3 @@
-const { request } = require("express");
-const { default: knex } = require("knex");
-const { patch } = require("../app");
 const dbConnection = require("../db/dbConnection");
 
 exports.fetchArticleByArticleId = (articleId) => {
@@ -61,12 +58,38 @@ exports.updateArticleVotes = (articleId, patchByAmount) => {
 };
 
 exports.addComment = (articleId, reqBody) => {
-  // models inserts article_id, username and body into comments as an array of objects
-  // returns the body (as an array containing one object)
   const username = reqBody.username;
   const body = reqBody.body;
-  return knex("comments").insert(
-    [{ article_id: articleId }, { author: username }, { body: body }],
-    ["body"]
-  );
+  return dbConnection("comments")
+    .insert([{ article_id: articleId, author: username, body: body }], ["body"])
+    .then((outputArray) => {
+      if (!outputArray[0].body) {
+        if (!Object.keys(reqBody).length) {
+          return Promise.reject({
+            status: 400,
+            msg: "Request is missing required fields",
+          });
+        } else if (
+          !Object.keys(reqBody).some((key) => {
+            return ["article_id", "author", "body"].includes(key);
+          })
+        ) {
+          return Promise.reject({
+            status: 400,
+            msg: "Request fields are invalid",
+          });
+        }
+      }
+      return outputArray;
+    });
+};
+
+exports.fetchCommentByArticleId = (articleId, query) => {
+  const sortBy = query.sort_by || "created_at";
+  const order = query.order || "desc";
+  return dbConnection
+    .select("author", "comment_id", "votes", "created_at", "body")
+    .from("comments")
+    .where("article_id", "=", articleId)
+    .orderBy(sortBy, order);
 };
