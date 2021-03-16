@@ -8,6 +8,9 @@ exports.handlePSQLErrors = (err, req, res, next) => {
     if (err.code === "22P02") {
       res.status(400).send("Bad request");
     }
+    if (err.code === "42703") {
+      res.status(400).send("Query contains invalid criteria");
+    }
     if (err.code === "23503") {
       res.status(404).send("Not found");
     }
@@ -16,5 +19,6 @@ exports.handlePSQLErrors = (err, req, res, next) => {
 };
 
 exports.handleServerErrors = (err, req, res, next) => {
+  console.log(err, "err in 500");
   res.sendStatus(500).send("Internal server error");
 };

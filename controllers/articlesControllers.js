@@ -1,10 +1,21 @@
-const { post } = require("../app");
 const {
+  fetchArticles,
   fetchArticleByArticleId,
   updateArticleVotes,
   addComment,
   fetchCommentByArticleId,
 } = require("../models/articlesModels");
+
+exports.getArticles = (req, res, next) => {
+  fetchArticles()
+    .then((arrayFromModel) => {
+      console.log(arrayFromModel, "array in model");
+    })
+    .catch((err) => {
+      console.log(err, "err in controller");
+      next(err);
+    });
+};
 
 exports.getArticleByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
@@ -42,11 +53,16 @@ exports.patchArticleVotes = (req, res, next) => {
 exports.getCommentByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
   const { query } = req;
-  fetchCommentByArticleId(articleId, query).then((arrayFromModel) => {
-    const commentObject = {};
-    commentObject.comments = arrayFromModel;
-    res.status(200).send(commentObject);
-  });
+  fetchCommentByArticleId(articleId, query)
+    .then((arrayFromModel) => {
+      const commentObject = {};
+      commentObject.comments = arrayFromModel;
+      console.log(commentObject, "comments in controller");
+      res.status(200).send(commentObject);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.postComment = (req, res, next) => {
@@ -56,7 +72,7 @@ exports.postComment = (req, res, next) => {
     .then((response) => {
       const postedComment = {};
       postedComment.comment = response[0];
-      res.status(201).send(postedComment);
+      res.status(201).send(response, "response in controller");
     })
     .catch((err) => {
       next(err);

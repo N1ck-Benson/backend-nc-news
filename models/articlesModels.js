@@ -1,5 +1,9 @@
 const dbConnection = require("../db/dbConnection");
 
+exports.fetchArticles = () => {
+  return dbConnection.select("*").from("articles");
+};
+
 exports.fetchArticleByArticleId = (articleId) => {
   return dbConnection
     .select("articles.*")
@@ -91,5 +95,14 @@ exports.fetchCommentByArticleId = (articleId, query) => {
     .select("author", "comment_id", "votes", "created_at", "body")
     .from("comments")
     .where("article_id", "=", articleId)
-    .orderBy(sortBy, order);
+    .orderBy(sortBy, order)
+    .then((outputArray) => {
+      if (!["asc", "desc"].includes(order)) {
+        return Promise.reject({
+          code: "42703",
+        });
+      } else {
+        return outputArray;
+      }
+    });
 };
