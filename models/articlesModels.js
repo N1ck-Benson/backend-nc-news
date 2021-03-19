@@ -1,7 +1,39 @@
 const dbConnection = require("../db/dbConnection");
 
-exports.fetchArticles = () => {
-  return dbConnection.select("*").from("articles");
+exports.fetchArticles = (query) => {
+  const sortBy = query.sort_by || "created_at";
+  const order = query.order || "desc";
+  return dbConnection
+    .select("articles.*")
+    .count("comments")
+    .from("articles")
+    .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
+    .groupBy("articles.article_id")
+    .orderBy(sortBy, order)
+    .then((outputArray) => {
+      // send an error code if order is not asc/desc
+      if (!["asc", "desc"].includes(order)) {
+        return Promise.reject({
+          code: "42703",
+        });
+      }
+      // filter if this is required by the query
+      if (query.filter) {
+        const filterBy = Object.keys(query.filter).join();
+        const lookFor = query.filter[filterBy];
+        if (["author", "topic"].includes(filterBy)) {
+          const filteredOutput = outputArray.filter((article) => {
+            return article[filterBy] === lookFor;
+          });
+          return filteredOutput;
+        } else {
+          return Promise.reject({
+            code: "42703",
+          });
+        }
+      }
+      return outputArray;
+    });
 };
 
 exports.fetchArticleByArticleId = (articleId) => {

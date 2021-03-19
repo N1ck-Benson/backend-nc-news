@@ -1,4 +1,3 @@
-const { res, resource } = require("../app");
 const { fetchTopics } = require("../models/topicsModels");
 
 exports.getTopics = (req, res, next) => {

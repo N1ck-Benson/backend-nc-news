@@ -7,12 +7,20 @@ const {
 } = require("../models/articlesModels");
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles()
+  const query = req.query;
+  fetchArticles(query)
     .then((arrayFromModel) => {
-      console.log(arrayFromModel, "array in model");
+      const articlesObject = {};
+      articlesObject.articles = arrayFromModel;
+      // change key-name and datatype of article.count
+      articlesObject.articles.map((article) => {
+        const count = parseFloat(article.count);
+        delete article.count;
+        article.comment_count = count;
+      });
+      res.status(200).send(articlesObject);
     })
     .catch((err) => {
-      console.log(err, "err in controller");
       next(err);
     });
 };
@@ -21,14 +29,14 @@ exports.getArticleByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
   fetchArticleByArticleId(articleId)
     .then((arrayFromModel) => {
-      const resObject = {};
+      const articleObject = {};
       const objectFromModel = arrayFromModel[0];
-      resObject.article = objectFromModel;
-      // NB: 'count' property on articleObject needs changing ->
-      const count = parseFloat(resObject.article.count);
-      delete resObject.article.count;
-      resObject.article.comment_count = count;
-      res.status(200).send(resObject);
+      articleObject.article = objectFromModel;
+      // 'count' property on articleObject needs changing ->
+      const count = parseFloat(articleObject.article.count);
+      delete articleObject.article.count;
+      articleObject.article.comment_count = count;
+      res.status(200).send(articleObject);
     })
     .catch((err) => {
       next(err);
@@ -57,7 +65,6 @@ exports.getCommentByArticleId = (req, res, next) => {
     .then((arrayFromModel) => {
       const commentObject = {};
       commentObject.comments = arrayFromModel;
-      console.log(commentObject, "comments in controller");
       res.status(200).send(commentObject);
     })
     .catch((err) => {
@@ -72,7 +79,7 @@ exports.postComment = (req, res, next) => {
     .then((response) => {
       const postedComment = {};
       postedComment.comment = response[0];
-      res.status(201).send(response, "response in controller");
+      res.status(201).send(postedComment);
     })
     .catch((err) => {
       next(err);
