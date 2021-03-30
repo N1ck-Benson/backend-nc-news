@@ -22,14 +22,3 @@ describe("createRefObj", () => {
     expect(actual).toEqual(expected);
   });
 });
-
-/* What do we want the function to do?
-- return an object with a newkey and a newvalue
-- the key and value are the title from the article in articlesData, and the article_id from articlesData
-
-What do we want to test for?
-- returns an empty object when passed an empty array
-- returns an object with one title:id pair, when passed data with one object
-- returns an object with multiple title:id pairs, when passed data with multiple objects
-- does not mutate the passed data array
-*/

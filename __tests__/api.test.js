@@ -41,7 +41,6 @@ describe("/", () => {
     });
     describe("/topics", () => {
       describe("GET", () => {
-        // HAPPY PATH ----> assuming SAD PATH would be handled in API SAD PATH (404)
         test("Status: 200 responds with array of topic objects, each with a slug and a description", () => {
           return request(app)
             .get("/api/topics")
@@ -60,7 +59,6 @@ describe("/", () => {
     });
     describe("/users", () => {
       describe("GET :username", () => {
-        // HAPPY PATH:
         test("Status: 200 and a user object with the correct keys", () => {
           return request(app)
             .get("/api/users/butter_bridge")
@@ -76,7 +74,6 @@ describe("/", () => {
               });
             });
         });
-        // SAD PATH:
         test("Status: 404 user not found", () => {
           return request(app)
             .get("/api/users/asdfqwer")
@@ -249,7 +246,6 @@ describe("/", () => {
         });
       });
       describe("GET /:article_id", () => {
-        // HAPPY PATH:
         test("Status: 200, responds with article object with correct properties", () => {
           return request(app)
             .get("/api/articles/1")
@@ -269,7 +265,6 @@ describe("/", () => {
               });
             });
         });
-        // SAD PATH:
         test("Status: 404, not found", () => {
           return request(app)
             .get("/api/articles/5000")
@@ -289,7 +284,6 @@ describe("/", () => {
       });
       describe("GET /:article_id/comments", () => {
         test("Status: 200, responds with array of comment objects, each with correct properties", () => {
-          // {comments: [{}, {}, etc.]}
           return request(app)
             .get("/api/articles/1/comments")
             .expect(200)
@@ -412,7 +406,6 @@ describe("/", () => {
               expect(body.comments).toEqual([]);
             });
         });
-        // SAD PATH
         test("Status: 400, invalid article_id", () => {
           return request(app)
             .get("/api/articles/five/comments")
@@ -439,7 +432,6 @@ describe("/", () => {
         });
       });
       describe("PATCH /:article_id", () => {
-        // HAPPY PATH:
         test("Status: 200, article successfully updated, responding with updated article", () => {
           return request(app)
             .patch("/api/articles/1")
@@ -459,7 +451,6 @@ describe("/", () => {
               });
             });
         });
-        // SAD PATH:
         test("Status: 404, article_id not found", () => {
           return request(app)
             .patch("/api/articles/5000")
@@ -478,7 +469,6 @@ describe("/", () => {
               expect(text).toBe("Bad request");
             });
         });
-        // (to save time, 400s haven't been handled with custom http error codes)
         test("Status: 400, request body contains a valid field with an invalid value/datatype", () => {
           return request(app)
             .patch("/api/articles/1")
@@ -582,7 +572,6 @@ describe("/", () => {
         });
       });
     });
-    // API SAD PATHS
     test("Status: 404 non-existent endpoint", () => {
       return request(app)
         .get("/api/topicz")
