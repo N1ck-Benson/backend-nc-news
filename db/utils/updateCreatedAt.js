@@ -8,3 +8,12 @@ exports.updateCreatedAt = (data) => {
   }
   return data;
 };
+
+const testCreatedAt = () => {
+  const timenow = Date.now()
+  console.log(timenow)
+  const time = new Date(timenow)
+  console.log(typeof time)
+}
+
+testCreatedAt()

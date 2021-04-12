@@ -97,7 +97,7 @@ exports.addComment = (articleId, reqBody) => {
   const username = reqBody.username;
   const body = reqBody.body;
   return dbConnection("comments")
-    .insert([{ article_id: articleId, author: username, body: body }], ["body"])
+    .insert({ article_id: articleId, author: username, body: body }, ["*"])
     .then((outputArray) => {
       if (!outputArray[0].body) {
         if (!Object.keys(reqBody).length) {
@@ -105,7 +105,10 @@ exports.addComment = (articleId, reqBody) => {
             status: 400,
             msg: "Request is missing required fields",
           });
-        } else if (
+        } 
+        // if the test below failed, we wouldn't have got this far
+        // this should also already be caught in teh controller
+        else if (
           !Object.keys(reqBody).some((key) => {
             return ["article_id", "author", "body"].includes(key);
           })

@@ -498,7 +498,7 @@ describe("/", () => {
         });
       });
       describe("POST /:article_id/comments", () => {
-        test("Status: 201, successful post returning posted comment", () => {
+        test.only("Status: 201, successful post returning posted comment", () => {
           return request(app)
             .post("/api/articles/1/comments")
             .send({ username: "butter_bridge", body: "I love this article!" })
@@ -506,7 +506,11 @@ describe("/", () => {
             .then(({ body }) => {
               expect(body).toMatchObject({
                 comment: {
-                  body: "I love this article!",
+                  comment_id: expect.any(Number),
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                  body: expect.any(String),
                 },
               });
             });
